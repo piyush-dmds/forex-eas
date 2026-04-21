@@ -255,14 +255,4 @@ Your repository is now:
 
 ---
 
-## 🎯 Next Steps
-
-1. Create GitHub repository
-2. Push all files
-3. Share link with clients
-4. Clients download and use
-5. Support them as needed
-
----
-
 **Everything is ready for your clients!**
