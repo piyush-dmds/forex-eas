@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MT5 Trading EAs Collection - Professional MetaTrader 5 Expert Advisors</title>
+
+    <style>
+        :root {
+            --primary-bg: #0a0a0f;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8c8;
+            --accent-gold: linear-gradient(135deg, #FFD700, #FFA500);
+            --accent-magenta: linear-gradient(135deg, #FF1493, #FF69B4);
+            --accent-emerald: linear-gradient(135deg, #50C878, #00FF7F);
+            --accent-orange: linear-gradient(135deg, #FF8C00, #FF6347);
+            --accent-blue: linear-gradient(135deg, #4169E1, #00BFFF);
+            --shadow-glow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 20, 147, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(0, 191, 255, 0.05) 0%, transparent 50%),
+                var(--primary-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(90deg, #FFD700, #FF69B4, #50C878, #FF8C00, #4169E1);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* EA Grid */
+        .ea-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* EA Card */
+        .ea-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .ea-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-glow);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .ea-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gold);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .ea-card:hover::before {
+            opacity: 1;
+        }
+
+        /* EA Header */
+        .ea-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 16px;
+        }
+
+        .ea-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .ea-icon.gold {
+            background: var(--accent-gold);
+        }
+
+        .ea-icon.magenta {
+            background: var(--accent-magenta);
+        }
+
+        .ea-icon.emerald {
+            background: var(--accent-emerald);
+        }
+
+        .ea-icon.orange {
+            background: var(--accent-orange);
+        }
+
+        .ea-icon.blue {
+            background: var(--accent-blue);
+        }
+
+        .ea-icon.standard {
+            background: linear-gradient(135deg, #6B7280, #9CA3AF);
+        }
+
+        .ea-info {
+            flex: 1;
+        }
+
+        .ea-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .ea-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* EA Content */
+        .ea-features {
+            margin-bottom: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-item::before {
+            content: '✓';
+            margin-right: 8px;
+            color: #50C878;
+            font-weight: bold;
+        }
+
+        /* EA Stats */
+        .ea-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* EA Actions */
+        .ea-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--accent-gold);
+            color: #000;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--card-border);
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, #FFD700, #FF69B4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .status-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            background: rgba(80, 200, 120, 0.1);
+            border: 1px solid rgba(80, 200, 120, 0.3);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #50C878;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px 12px;
+            }
+
+            .ea-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .ea-card {
+                padding: 20px;
+            }
+
+            .ea-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .ea-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .ea-actions {
+                flex-direction: column;
+            }
+
+            .status-badges {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .ea-card {
+                padding: 16px;
+            }
+
+            .ea-icon {
+                width: 56px;
+                height: 56px;
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">🏆 MT5 Trading EAs Collection</h1>
+            <p class="subtitle">Professional MetaTrader 5 Expert Advisors with World-Class Visual Designs &
+                YouTube-Ready Performance</p>
+        </header>
+
+        <!-- EA Grid -->
+        <div class="ea-grid">
+
+            <!-- GoldTrade EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon gold">🥇</div>
+                    <div class="ea-info">
+                        <div class="ea-name">GoldTrade EA</div>
+                        <span class="ea-tag">Gold Cyan Theme</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Trend Following Strategy for XAUUSD</div>
+                    <div class="feature-item">Gold-themed Market Pulse with Wave Animations</div>
+                    <div class="feature-item">Professional Glow Effects & Dynamic Branding</div>
+                    <div class="feature-item">YouTube-Ready Visual Excellence</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">50-60%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:3</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="GoldTrade_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- KartikTrend EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon magenta">🎬</div>
+                    <div class="ea-info">
+                        <div class="ea-name">KartikTrend EA</div>
+                        <span class="ea-tag">Magenta Theme</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Grid Martingale with Trend Following</div>
+                    <div class="feature-item">3-Layer Wave Animations & Dynamic Subtitles</div>
+                    <div class="feature-item">Professional MT5 Branding System</div>
+                    <div class="feature-item">Perfect for YouTube Recordings</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Basket</div>
+                        <div class="stat-label">Profit Type</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">M15-H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="KartikTrend_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- WealthBuilderPro EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon emerald">💎</div>
+                    <div class="ea-info">
+                        <div class="ea-name">WealthBuilderPro EA</div>
+                        <span class="ea-tag">Emerald Theme</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Multi-Strategy Wealth Building</div>
+                    <div class="feature-item">Premium Emerald Lighting System</div>
+                    <div class="feature-item">6-Layer MA Constellation</div>
+                    <div class="feature-item">Professional Wealth Management</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:3</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="WealthBuilderPro_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- TrendContinuous EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon orange">🌊</div>
+                    <div class="ea-info">
+                        <div class="ea-name">TrendContinuous EA</div>
+                        <span class="ea-tag">Orange Theme</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Dual Mode Continuous Grid Trading</div>
+                    <div class="feature-item">Orange Wave Animations</div>
+                    <div class="feature-item">Advanced Grid Trading System</div>
+                    <div class="feature-item">Continuous Trend Following</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Basket</div>
+                        <div class="stat-label">Profit Type</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">M15-H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="TrendContinuous_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- EMAGrid EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon blue">⚡</div>
+                    <div class="ea-info">
+                        <div class="ea-name">EMAGrid EA</div>
+                        <span class="ea-tag">Electric Blue Theme</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">EMA 200-Based Grid Trading</div>
+                    <div class="feature-item">Electric Blue Wave Animations</div>
+                    <div class="feature-item">Professional MT5 Branding</div>
+                    <div class="feature-item">Smooth Trend Following</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Basket</div>
+                        <div class="stat-label">Profit Type</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">M15-H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="EMAGrid_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- ProFit EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">📊</div>
+                    <div class="ea-info">
+                        <div class="ea-name">ProFit EA</div>
+                        <span class="ea-tag">Mean Reversion</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Bollinger Bands Mean Reversion Strategy</div>
+                    <div class="feature-item">ATR-Based Dynamic Position Sizing</div>
+                    <div class="feature-item">Professional Risk Management</div>
+                    <div class="feature-item">Optimized for Ranging Markets</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">50-60%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:3</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="ProFit_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- TradePro EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">🎯</div>
+                    <div class="ea-info">
+                        <div class="ea-name">TradePro EA</div>
+                        <span class="ea-tag">Bollinger + RSI</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Bollinger Bands with RSI Confirmation</div>
+                    <div class="feature-item">Momentum Shift Detection</div>
+                    <div class="feature-item">Enhanced Entry Logic</div>
+                    <div class="feature-item">Confirmation Trading Strategy</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:3</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="TradePro_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- SmartTrend EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">📈</div>
+                    <div class="ea-info">
+                        <div class="ea-name">SmartTrend EA</div>
+                        <span class="ea-tag">EMA Crossover</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">EMA Crossover with ATR</div>
+                    <div class="feature-item">Dynamic Position Sizing</div>
+                    <div class="feature-item">Trend Following Strategy</div>
+                    <div class="feature-item">Multi-Timeframe Support</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">50-60%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:3</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">M5-H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="SmartTrend_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- HFT Scalper EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">⚡</div>
+                    <div class="ea-info">
+                        <div class="ea-name">HFT Scalper EA</div>
+                        <span class="ea-tag">M5 Scalping</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Bollinger Bands + Stochastic</div>
+                    <div class="feature-item">Quick Profit Scalping</div>
+                    <div class="feature-item">High-Frequency Trading</div>
+                    <div class="feature-item">Optimized for Active Markets</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:2.5</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">M5</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="HFT_Scalper_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- ScalpAverage EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">⚡</div>
+                    <div class="ea-info">
+                        <div class="ea-name">ScalpAverage EA</div>
+                        <span class="ea-tag">Scalp + Averaging</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Scalping with Controlled Averaging</div>
+                    <div class="feature-item">Quick Entry/Exit Strategy</div>
+                    <div class="feature-item">Aggressive Trading Style</div>
+                    <div class="feature-item">M1-M5 Timeframe Support</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:2</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">M1-M5</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="ScalpAverageEA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- RSI Divergence EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">🔄</div>
+                    <div class="ea-info">
+                        <div class="ea-name">RSI Divergence EA</div>
+                        <span class="ea-tag">RSI Divergence</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">RSI Divergence Detection</div>
+                    <div class="feature-item">Trend Reversal Trading</div>
+                    <div class="feature-item">High Probability Setups</div>
+                    <div class="feature-item">Oversold/Overbought Conditions</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">60-70%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:3</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="RsiDivergence_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- MACD Trend EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">📊</div>
+                    <div class="ea-info">
+                        <div class="ea-name">MACD Trend EA</div>
+                        <span class="ea-tag">MACD Momentum</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">MACD Crossover Strategy</div>
+                    <div class="feature-item">Histogram Confirmation</div>
+                    <div class="feature-item">Zero-Line Filter</div>
+                    <div class="feature-item">Momentum Trading</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:3</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="MacdTrend_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- Support Resistance EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">🎯</div>
+                    <div class="ea-info">
+                        <div class="ea-name">Support Resistance EA</div>
+                        <span class="ea-tag">Level Bounces</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Support/Resistance Level Trading</div>
+                    <div class="feature-item">Price Action Based</div>
+                    <div class="feature-item">Level Bounce Strategy</div>
+                    <div class="feature-item">Ranging Market Optimization</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">60-70%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1:3</div>
+                        <div class="stat-label">Risk/Reward</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="SupportResistance_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+            <!-- Supertrend Grid EA -->
+            <div class="ea-card">
+                <div class="ea-header">
+                    <div class="ea-icon standard">🌊</div>
+                    <div class="ea-info">
+                        <div class="ea-name">Supertrend Grid EA</div>
+                        <span class="ea-tag">Supertrend Grid</span>
+                    </div>
+                </div>
+
+                <div class="ea-features">
+                    <div class="feature-item">Supertrend + ADX Filter</div>
+                    <div class="feature-item">Grid Averaging System</div>
+                    <div class="feature-item">Step Martingale Progression</div>
+                    <div class="feature-item">Basket Profit Management</div>
+                </div>
+
+                <div class="ea-stats">
+                    <div class="stat">
+                        <div class="stat-value">55-65%</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">Basket</div>
+                        <div class="stat-label">Profit Type</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">M15-H1</div>
+                        <div class="stat-label">Timeframe</div>
+                    </div>
+                </div>
+
+                <div class="ea-actions">
+                    <a href="SupertrendGrid_EA/README.md" class="btn btn-primary">View Guide</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <h2 class="footer-title">🎬 MT5 Visual Design System</h2>
+                <p class="footer-text">
+                    World-class visual excellence with professional animations, dynamic branding, and YouTube-ready
+                    performance.
+                    Optimized for professional trading, presentations, and content creation.
+                </p>
+                <div class="status-badges">
+                    <span class="status-badge">✅ Visual Design Complete</span>
+                    <span class="status-badge">✅ YouTube Ready</span>
+                    <span class="status-badge">✅ Performance Optimized</span>
+                    <span class="status-badge">✅ Professional Grade</span>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>
